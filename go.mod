@@ -1,3 +1,3 @@
-module github.com/arithmeticEncoding
+module Arithmetic-encoding
 
 go 1.22.3

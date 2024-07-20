@@ -7,8 +7,31 @@ import (
 	"os"
 )
 
+var (
+	fileContent string
+	codeTable   []CodeProbabilityTable
+)
+
+// Encoder represents
+type Encoder interface {
+	EventEncoder([]byte) string // maybe takes a file and return the encoding
+}
+
+// CodeProbabilityTable represents the idea of what the probability table
+// for the string data
+type CodeProbabilityTable struct {
+	symbol      string
+	freq        int
+	probability float64
+}
+
+// The more frequent symbols have shorter codes
+// The less frequent symbols have longer codes
+
+// I need a way to map symbols to their respective codes
+//
+
 func main() {
-	var fileContent string
 	runeFreqMap := make(map[rune]int, 10) // rune freq map
 	fmt.Println("hello arithmetic encoding")
 
@@ -19,7 +42,6 @@ func main() {
 
 	// for each file i want to have a freq table for the entries
 	for _, file := range os.Args[1:] {
-		fmt.Printf("file %f\n", file)
 		filem, err := os.ReadFile(file)
 		if err != nil {
 			panic("No file exist")
@@ -27,13 +49,30 @@ func main() {
 		fileContent = string(filem)
 	}
 
-	for _, d := range fileContent {
-		//	fmt.Printf("%c", d)
-		runeFreqMap[d]++
+	// makes the frequency table
+	MakeFreqTable(runeFreqMap)
+	// add the obj
+	for k, val := range runeFreqMap {
+		relativeProb := float64(val) / float64(len(fileContent))
+		codeTable = append(codeTable, CodeProbabilityTable{
+			string(k),
+			val,
+			relativeProb,
+		})
 	}
-
-	for k, v := range runeFreqMap {
-		relativeFrequency := float64(v) / float64(len(fileContent))
-		fmt.Printf("%q: %d, Relative Frequency: %.6f\n", k, v, relativeFrequency)
+	// prints the code struct
+	for _, codes := range codeTable {
+		fmt.Printf("%q %d %.3f\n", codes.symbol, codes.freq, codes.probability)
 	}
 }
+
+// Todo make Preqencies table here
+func MakeFreqTable(data map[rune]int) {
+	for _, d := range fileContent {
+		data[d]++
+	}
+}
+
+// Todo
+
+// Todo
