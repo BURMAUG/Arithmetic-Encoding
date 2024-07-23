@@ -29,10 +29,8 @@ type CodeProbabilityTable struct {
 // The less frequent symbols have longer codes
 
 // I need a way to map symbols to their respective codes
-//
-
 func main() {
-	runeFreqMap := make(map[rune]int, 10) // rune freq map
+	runeFreqMap := make(map[rune]int, 0) // rune freq map
 	fmt.Println("hello arithmetic encoding")
 
 	// Check for a file being read from the console
